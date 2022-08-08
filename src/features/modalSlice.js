@@ -3,7 +3,16 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   addModal: false,
   updateModal: false,
+  updateData: {
+    name: "",
+    address: "",
+    country: "",
+    phone_number: "",
+    job_title: "",
+    status: true,
+  },
   deleteModal: false,
+  deleteData: {},
 };
 const modalSlice = createSlice({
   name: "modal",
@@ -13,10 +22,16 @@ const modalSlice = createSlice({
       state.addModal = action.payload;
     },
     setUpdateModal: (state, action) => {
-      state.updateModal = action.payload;
+      if (action.payload.data) {
+        state.updateData = action.payload.data;
+      }
+      state.updateModal = action.payload.isOpen;
     },
     setDeleteModal: (state, action) => {
-      state.deleteModal = action.payload;
+      if (action.payload.data) {
+        state.deleteData = action.payload.data;
+      }
+      state.deleteModal = action.payload.isOpen;
     },
   },
 });

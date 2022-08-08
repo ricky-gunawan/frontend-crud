@@ -34,8 +34,8 @@ export default function DataSection() {
             <div className="text-center md:col-start-9 md:col-span-2">{job_title}</div>
             <div className="text-center md:col-start-11">{status ? <div className="text-green-700">Active</div> : <div className="text-red-700">Non Active</div>}</div>
             <div className="mt-4 md:m-0 text-center flex gap-4 justify-center xs:col-span-2 sm:col-span-3 md:col-start-12">
-              <PencilIcon onClick={() => dispatch(setUpdateModal(true))} className="text-green-700 w-5 h-5" />
-              <TrashIcon onClick={() => dispatch(setDeleteModal(true))} className="text-red-700 w-5 h-5" />
+              <PencilIcon onClick={() => dispatch(setUpdateModal({ isOpen: true, data: { id, name, address, country, phone_number, job_title, status } }))} className="text-green-700 w-5 h-5 cursor-pointer" />
+              <TrashIcon onClick={() => dispatch(setDeleteModal({ isOpen: true, id, data: { id, name, address, country, phone_number, job_title, status } }))} className="text-red-700 w-5 h-5 cursor-pointer" />
             </div>
           </div>
         ))

@@ -1,80 +1,97 @@
 import { XCircleIcon } from "@heroicons/react/outline";
 import { useSelector, useDispatch } from "react-redux";
 import { setUpdateModal } from "../features/modalSlice";
+import { updateCustomer } from "../features/customerSlice";
+import { useEffect, useState } from "react";
 
 export default function UpdateModal() {
-  const updateModal = useSelector((store) => store.modal.updateModal);
+  const {
+    user: { token },
+    modal: { updateModal, updateData },
+  } = useSelector((store) => store);
   const dispatch = useDispatch();
+
+  const [form, setForm] = useState(updateData);
+
+  const handleForm = (e) => {
+    const name = e.target.name;
+    const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+
+    setForm((prev) => {
+      return { ...prev, [name]: value };
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(updateCustomer({ token, newCustomer: form }));
+  };
+
+  useEffect(() => {
+    setForm(updateData);
+  }, [updateData]);
 
   return (
     <div className={`${updateModal ? "" : "hidden"} fixed top-0 left-0 z-20 h-screen w-screen bg-black/60`}>
       <div className="absolute left-1/2 top-1/2 w-[94%] max-w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-md bg-[#9aa19c]">
-        <XCircleIcon onClick={() => dispatch(setUpdateModal(false))} className="absolute top-3 right-3 cursor-pointer font-bold text-red-700 hover:text-red-800 w-8 h-8" />
+        <XCircleIcon onClick={() => dispatch(setUpdateModal({ isOpen: false }))} className="absolute top-3 right-3 cursor-pointer font-bold text-red-700 hover:text-red-800 w-8 h-8" />
         <div className="m-3 mt-4 text-[#f7f7f7] font-semibold text-center">UPDATE CUSTOMER</div>
-        <form className="m-3 mb-4">
+        <form onSubmit={handleSubmit} className="m-3 mb-4">
           <input
-            // value={name}
-            // onChange={handleName}
+            value={form.name}
+            onChange={handleForm}
             type="text"
-            // name="name"
-            // id="signUp_name"
+            name="name"
+            id="update_name"
             className="w-full mb-4 rounded-sm bg-slate-100 border border-slate-300 focus:border-green-700 focus:ring-green-700"
             placeholder="Name"
             required
           />
           <input
-            // value={name}
-            // onChange={handleName}
+            value={form.address}
+            onChange={handleForm}
             type="text"
-            // name="name"
-            // id="signUp_name"
+            name="address"
+            id="update_address"
             className="w-full mb-4 rounded-sm bg-slate-100 border border-slate-300 focus:border-green-700 focus:ring-green-700"
             placeholder="Address"
             required
           />
           <input
-            // value={name}
-            // onChange={handleName}
+            value={form.country}
+            onChange={handleForm}
             type="text"
-            // name="name"
-            // id="signUp_name"
+            name="country"
+            id="update_country"
             className="w-full mb-4 rounded-sm bg-slate-100 border border-slate-300 focus:border-green-700 focus:ring-green-700"
             placeholder="Country"
             required
           />
           <input
-            // value={name}
-            // onChange={handleName}
+            value={form.phone_number}
+            onChange={handleForm}
             type="text"
-            // name="name"
-            // id="signUp_name"
+            name="phone_number"
+            id="update_phone_number"
             className="w-full mb-4 rounded-sm bg-slate-100 border border-slate-300 focus:border-green-700 focus:ring-green-700"
             placeholder="Phone"
             required
           />
           <input
-            // value={name}
-            // onChange={handleName}
+            value={form.job_title}
+            onChange={handleForm}
             type="text"
-            // name="name"
-            // id="signUp_name"
+            name="job_title"
+            id="update_job_title"
             className="w-full mb-2 rounded-sm bg-slate-100 border border-slate-300 focus:border-green-700 focus:ring-green-700"
             placeholder="Job Title"
             required
           />
-          <div className="ml-4 mb-4 flex gap-6 items-center">
-            <div className="flex items-center">
-              <input className="rounded-md focus:ring-2 text-green-700 focus:ring-green-700" type="radio" name="radio" id="radio_1" />
-              <label htmlFor="radio_1" className="ml-2 ">
-                Active
-              </label>
-            </div>
-            <div className="flex items-center">
-              <input className="rounded-md focus:ring-2 text-green-700 focus:ring-green-700" type="radio" name="radio" id="radio_2" />
-              <label htmlFor="radio_2" className="ml-2 ">
-                Non Active
-              </label>
-            </div>
+          <div className="ml-2 mb-4 flex items-center">
+            <input checked={form.status} onChange={handleForm} className="rounded-md focus:ring-2 text-green-700 focus:ring-green-700" type="checkbox" name="status" id="update_checkbox" />
+            <label htmlFor="update_checkbox" className="ml-2 ">
+              Active
+            </label>
           </div>
           <input type="submit" value="Submit" className="w-full h-8 cursor-pointer rounded-md bg-green-600 text-[#f7f7f7] text-semibold uppercase hover:bg-green-700" />
         </form>

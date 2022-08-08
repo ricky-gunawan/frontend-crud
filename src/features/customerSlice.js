@@ -1,24 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { setAddModal, setDeleteModal, setUpdateModal } from "./modalSlice";
 import { login } from "./userSlice";
-
-export const deleteCustomer = createAsyncThunk("customer/deleteCustomer", async (payload, thunkAPI) => {
-  try {
-    const resp = await axios.delete("https://mitramas-test.herokuapp.com/customers", {
-      headers: {
-        authorization: payload.token,
-      },
-      data: {
-        id: payload.id,
-      },
-    });
-    thunkAPI.dispatch(fetchCustomers(payload.token));
-  } catch (error) {
-    if (error.response.status === 401) {
-      thunkAPI.dispatch(login());
-    }
-  }
-});
 
 export const fetchCustomers = createAsyncThunk("customer/fetchCustomers", async (token, thunkAPI) => {
   try {
@@ -31,6 +14,69 @@ export const fetchCustomers = createAsyncThunk("customer/fetchCustomers", async 
   } catch (error) {
     if (error.response.status === 401) {
       thunkAPI.dispatch(login());
+    }
+  }
+});
+
+export const addCustomer = createAsyncThunk("customer/addCustomer", async (payload, thunkAPI) => {
+  try {
+    const resp = await axios.post("https://mitramas-test.herokuapp.com/customers", payload.newCustomer, {
+      headers: {
+        authorization: payload.token,
+      },
+    });
+    thunkAPI.dispatch(fetchCustomers(payload.token));
+    thunkAPI.dispatch(setAddModal(false));
+    console.log(resp.data.message);
+  } catch (error) {
+    if (error.response.status === 401) {
+      thunkAPI.dispatch(login());
+    }
+    if (error.response.status === 400) {
+      console.log("input tidak valid");
+    }
+  }
+});
+
+export const updateCustomer = createAsyncThunk("customer/updateCustomer", async (payload, thunkAPI) => {
+  try {
+    const resp = await axios.put("https://mitramas-test.herokuapp.com/customers", payload.newCustomer, {
+      headers: {
+        authorization: payload.token,
+      },
+    });
+    thunkAPI.dispatch(fetchCustomers(payload.token));
+    thunkAPI.dispatch(setUpdateModal({ isOpen: false }));
+    console.log(resp.data.message);
+  } catch (error) {
+    if (error.response.status === 401) {
+      thunkAPI.dispatch(login());
+    }
+    if (error.response.status === 400) {
+      console.log("input tidak valid");
+    }
+  }
+});
+
+export const deleteCustomer = createAsyncThunk("customer/deleteCustomer", async (payload, thunkAPI) => {
+  try {
+    const resp = await axios.delete("https://mitramas-test.herokuapp.com/customers", {
+      headers: {
+        authorization: payload.token,
+      },
+      data: {
+        id: payload.id,
+      },
+    });
+    thunkAPI.dispatch(fetchCustomers(payload.token));
+    thunkAPI.dispatch(setDeleteModal({ isOpen: false }));
+    console.log(resp.data.message);
+  } catch (error) {
+    if (error.response.status === 401) {
+      thunkAPI.dispatch(login());
+    }
+    if (error.response.status === 404) {
+      console.log("customer tidak ditemukan");
     }
   }
 });
