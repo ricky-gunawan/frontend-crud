@@ -14,8 +14,10 @@ export const login = () => async (dispatch) => {
   }
 };
 
+const token = JSON.parse(localStorage.getItem("token")) || "";
+
 const initialState = {
-  token: "",
+  token,
 };
 
 const userSlice = createSlice({
@@ -24,6 +26,7 @@ const userSlice = createSlice({
   reducers: {
     setToken: (state, action) => {
       state.token = action.payload;
+      localStorage.setItem("token", JSON.stringify(action.payload));
     },
   },
 });
