@@ -1,8 +1,15 @@
+import { XCircleIcon } from "@heroicons/react/outline";
+import { useSelector, useDispatch } from "react-redux";
+import { setAddModal } from "../features/modalSlice";
+
 export default function AddModal() {
+  const addModal = useSelector((store) => store.modal.addModal);
+  const dispatch = useDispatch();
+
   return (
-    <div className="fixed top-0 left-0 z-20 h-screen w-screen bg-black/60">
+    <div className={`${addModal ? "" : "hidden"} fixed top-0 left-0 z-20 h-screen w-screen bg-black/60`}>
       <div className="absolute left-1/2 top-1/2 w-[94%] max-w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-md bg-[#9aa19c]">
-        <div className="absolute top-3 right-3 cursor-pointer font-bold">❌</div>
+        <XCircleIcon onClick={() => dispatch(setAddModal(false))} className="absolute top-3 right-3 cursor-pointer font-bold text-red-700 hover:text-red-800 w-8 h-8" />
         <div className="m-3 mt-4 text-[#f7f7f7] font-semibold text-center">ADD CUSTOMER</div>
         <form className="m-3 mb-4">
           <input

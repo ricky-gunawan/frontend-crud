@@ -9,9 +9,9 @@ function App() {
     <>
       <Header />
       <DataSection />
-      {/* <AddModal /> */}
-      {/* <UpdateModal /> */}
-      {/* <DeleteModal /> */}
+      <AddModal />
+      <UpdateModal />
+      <DeleteModal />
     </>
   );
 }

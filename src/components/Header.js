@@ -1,26 +1,12 @@
 import { PlusIcon, SearchIcon } from "@heroicons/react/outline";
-import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { setDisplayedCustomers } from "../features/customerSlice";
+import { setAddModal } from "../features/modalSlice";
 
 export default function Header() {
   const dispatch = useDispatch();
-  // const [form, setForm] = useState({ search: "", filter: "", sort: "" });
 
-  // const handleForm = (e) => {
-  //   const name = e.target.name;
-  //   const value = e.target.value;
-
-  //   setForm((prev) => {
-  //     return { ...prev, [name]: value };
-  //   });
-  // };
-
-  // useEffect(() => {
-  //   dispatch(setDisplayedCustomers(form));
-  // }, [dispatch, form]);
-
-  // value={form.search} onChange={handleForm}
   const searchRef = useRef("");
   const filterRef = useRef("");
   const sortRef = useRef("");
@@ -57,7 +43,7 @@ export default function Header() {
                 <option value="dsc">Sort by Name (DSC)</option>
               </select>
             </div>
-            <div className="bg-green-700 w-fit sm:w-full sm:max-w-[8rem] rounded-md self-stretch flex items-center justify-center">
+            <div onClick={() => dispatch(setAddModal(true))} className="bg-green-700 hover:bg-green-800 w-fit sm:w-full sm:max-w-[8rem] rounded-md self-stretch flex items-center justify-center cursor-pointer">
               <PlusIcon className="lg:hidden text-white mx-4 w-8 h-8" />
               <div className="hidden lg:block text-sm text-[#f7f7f7] font-semibold mx-2 min-w-[7rem]">ADD CUSTOMER</div>
             </div>
