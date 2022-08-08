@@ -1,6 +1,40 @@
 import { PlusIcon, SearchIcon } from "@heroicons/react/outline";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setDisplayedCustomers } from "../features/customerSlice";
 
 export default function Header() {
+  const dispatch = useDispatch();
+  // const [form, setForm] = useState({ search: "", filter: "", sort: "" });
+
+  // const handleForm = (e) => {
+  //   const name = e.target.name;
+  //   const value = e.target.value;
+
+  //   setForm((prev) => {
+  //     return { ...prev, [name]: value };
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   dispatch(setDisplayedCustomers(form));
+  // }, [dispatch, form]);
+
+  // value={form.search} onChange={handleForm}
+  const searchRef = useRef("");
+  const filterRef = useRef("");
+  const sortRef = useRef("");
+
+  const handleForm = () => {
+    dispatch(
+      setDisplayedCustomers({
+        search: searchRef.current.value,
+        filter: filterRef.current.value,
+        sort: sortRef.current.value,
+      })
+    );
+  };
+
   return (
     <div className="fixed z-10 top-0 left-0 p-4 w-full">
       <div className="p-4 flex flex-col items-center justify-center sm:flex-row gap-4 bg-[#f7f7f7] rounded-t-md shadow-lg">
@@ -8,17 +42,17 @@ export default function Header() {
         <div className="flex flex-col gap-2 items-center justify-center w-full md:flex-row">
           <div className="flex items-center w-full">
             <SearchIcon className="w-[48px] h-[42px] p-2 border border-[#c7c7c7] bg-[#d7d7d7] rounded-l-md" />
-            <input type="text" className="w-full rounded-r-md bg-white border-0 border-y border-r border-[#c7c7c7] focus:border-[#6b6b6b] focus:ring-0" />
+            <input ref={searchRef} onChange={handleForm} name="search" type="text" className="w-full rounded-r-md bg-white border-0 border-y border-r border-[#c7c7c7] focus:border-[#6b6b6b] focus:ring-0" />
           </div>
           <div className="flex gap-2 items-center justify-center w-full lg:w-fit">
             <div className="flex flex-col sm:flex-row gap-2 w-full lg:w-fit">
-              <select className="rounded-md bg-white border-[#c7c7c7] focus:border-[#6b6b6b] focus:ring-0" name="filter" id="filter">
-                <option value="all">All Customers</option>
+              <select ref={filterRef} onChange={handleForm} name="filter" id="filter" className="rounded-md bg-white border-[#c7c7c7] focus:border-[#6b6b6b] focus:ring-0">
+                <option value="">All Customers</option>
                 <option value="active">Active</option>
-                <option value="non_active">Non active</option>
+                <option value="non_active">Non Active</option>
               </select>
-              <select className="rounded-md bg-white border-[#c7c7c7] focus:border-[#6b6b6b] focus:ring-0" name="sort" id="sort">
-                <option value="unsorted">Unsorted</option>
+              <select ref={sortRef} onChange={handleForm} name="sort" id="sort" className="rounded-md bg-white border-[#c7c7c7] focus:border-[#6b6b6b] focus:ring-0">
+                <option value="">Unsorted</option>
                 <option value="asc">Sort by Name (ASC)</option>
                 <option value="dsc">Sort by Name (DSC)</option>
               </select>

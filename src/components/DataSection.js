@@ -6,12 +6,17 @@ import { customersList } from "./customersList";
 import Loader from "./Loader";
 
 export default function DataSection() {
-  const { isLoading, allCustomers } = useSelector((store) => store.customer);
+  const {
+    customer: { isLoading, allCustomers, displayedCustomers },
+    user: { token },
+  } = useSelector((store) => store);
+
+  const customers = displayedCustomers ? displayedCustomers : allCustomers;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchCustomers());
-  }, [dispatch]);
+    dispatch(fetchCustomers(token));
+  }, [dispatch, token]);
   return (
     <div className="mt-[27.5rem] xs:mt-[22.3rem] sm:mt-[14.5rem] md:mt-[9.2rem]">
       {isLoading ? (
@@ -19,7 +24,7 @@ export default function DataSection() {
           <Loader />
         </div>
       ) : (
-        allCustomers.map(({ id, name, address, country, phone_number, job_title, status }, index) => (
+        customers.map(({ id, name, address, country, phone_number, job_title, status }, index) => (
           <div key={id} className="relative mt-1 p-4 pl-7 bg-[#f7f7f7] rounded-md shadow-md grid gap-3 md:gap-1 grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-12">
             <span className="absolute left-4 top-4">{index + 1}.</span>
             <div className="text-center md:col-start-1 md:col-span-2">{name}</div>

@@ -1,27 +1,33 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { login } from "./userSlice";
 
-export const fetchCustomers = createAsyncThunk("customer/fetchCustomers", async () => {
-  const resp = await axios.get("https://mitramas-test.herokuapp.com/customers", {
-    headers: {
-      authorization:
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9taXRyYW1hcy10ZXN0Lmhlcm9rdWFwcC5jb21cL2F1dGhcL2xvZ2luIiwiaWF0IjoxNjU5ODg0Mjc0LCJleHAiOjE2NTk4ODc4NzQsIm5iZiI6MTY1OTg4NDI3NCwianRpIjoiMWlzaVZVdUMyRTRKOFhZOSIsInN1YiI6MTUzLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.iqVPnzwy3Rl2v7Ml3BxDZVgKwZIWmXka55ktE4xauNM",
-    },
-  });
-  return resp.data.data;
+export const fetchCustomers = createAsyncThunk("customer/fetchCustomers", async (token, thunkAPI) => {
+  try {
+    const resp = await axios.get("https://mitramas-test.herokuapp.com/customers", {
+      headers: {
+        authorization: `${token}`,
+      },
+    });
+    return resp.data.data;
+  } catch (error) {
+    if (error.response.status === 401) {
+      thunkAPI.dispatch(login());
+    }
+  }
 });
 
 const initialState = {
   isLoading: true,
   allCustomers: [],
-  displayedCustomers: [],
 };
 
 const customerSlice = createSlice({
   name: "customer",
   initialState,
   reducers: {
-    setDisplayedCustomers: (state, { search, filter, sort }) => {
+    setDisplayedCustomers: (state, action) => {
+      const { search, filter, sort } = action.payload;
       const searchResult = search
         ? state.allCustomers.filter(
             (customer) =>
@@ -33,7 +39,7 @@ const customerSlice = createSlice({
           )
         : state.allCustomers;
 
-      const filterResult = filter ? searchResult.filter((customer) => customer.status === filter) : searchResult;
+      const filterResult = filter ? searchResult.filter((customer) => customer.status === (filter === "active")) : searchResult;
 
       const sortResult = [...filterResult];
 
@@ -52,6 +58,8 @@ const customerSlice = createSlice({
         });
 
       sort === "dsc" && sortResult.reverse();
+
+      state.displayedCustomers = sortResult;
     },
   },
   extraReducers: {
@@ -60,7 +68,9 @@ const customerSlice = createSlice({
     },
     [fetchCustomers.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.allCustomers = action.payload;
+      if (action.payload) {
+        state.allCustomers = action.payload;
+      }
     },
     [fetchCustomers.rejected]: (state) => {
       state.isLoading = true;
