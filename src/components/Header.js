@@ -1,11 +1,12 @@
-import { PlusIcon, SearchIcon } from "@heroicons/react/outline";
+import { ChevronDownIcon, ChevronUpIcon, PlusIcon, SearchIcon } from "@heroicons/react/outline";
 import { useRef } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setDisplayedCustomers } from "../features/customerSlice";
-import { setAddModal } from "../features/modalSlice";
+import { setAddModal, setSlider } from "../features/modalSlice";
 
 export default function Header() {
   const dispatch = useDispatch();
+  const slider = useSelector((store) => store.modal.slider);
 
   const searchRef = useRef("");
   const filterRef = useRef("");
@@ -57,7 +58,7 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <div className="p-4 pl-7 bg-[#d7d7d7] rounded-b-md shadow-lg grid gap-1 grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-12">
+      <div className={`relative ${slider ? "" : "-translate-y-[11rem]"} -z-10 xs:-translate-y-0 p-4 pl-7 bg-[#d7d7d7] rounded-b-md shadow-lg grid gap-1 grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-12`}>
         <div className="text-center md:col-start-1 md:col-span-2">Name</div>
         <div className="text-center md:col-start-3 md:col-span-3">Address</div>
         <div className="text-center md:col-start-6">Country</div>
@@ -65,6 +66,8 @@ export default function Header() {
         <div className="text-center md:col-start-9 md:col-span-2">Job Title</div>
         <div className="text-center md:col-start-11">Status</div>
         <div className="text-center flex gap-4 justify-center xs:col-span-2 sm:col-span-3 md:col-start-12"></div>
+        <ChevronDownIcon onClick={() => dispatch(setSlider(true))} className={`${slider ? "hidden" : ""} xs:hidden w-6 h-6 text-black mx-auto`} />
+        <ChevronUpIcon onClick={() => dispatch(setSlider(false))} className={`${slider ? "" : "hidden"} xs:hidden w-6 h-6 text-black mx-auto`} />
       </div>
     </div>
   );

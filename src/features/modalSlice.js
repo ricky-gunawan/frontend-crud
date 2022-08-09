@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  slider: false,
   addModal: false,
   updateModal: false,
   updateData: {
@@ -18,6 +19,9 @@ const modalSlice = createSlice({
   name: "modal",
   initialState,
   reducers: {
+    setSlider: (state, action) => {
+      state.slider = action.payload;
+    },
     setAddModal: (state, action) => {
       state.addModal = action.payload;
     },
@@ -36,6 +40,6 @@ const modalSlice = createSlice({
   },
 });
 
-export const { setAddModal, setUpdateModal, setDeleteModal } = modalSlice.actions;
+export const { setSlider, setAddModal, setUpdateModal, setDeleteModal } = modalSlice.actions;
 
 export default modalSlice.reducer;

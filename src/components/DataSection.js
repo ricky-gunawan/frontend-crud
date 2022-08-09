@@ -9,6 +9,7 @@ export default function DataSection() {
   const {
     customer: { isLoading, allCustomers, displayedCustomers },
     user: { token },
+    modal: { slider },
   } = useSelector((store) => store);
 
   const customers = displayedCustomers ? displayedCustomers : allCustomers;
@@ -18,7 +19,7 @@ export default function DataSection() {
     dispatch(fetchCustomers(token));
   }, [dispatch, token]);
   return (
-    <div className="mt-[27.5rem] xs:mt-[22.3rem] sm:mt-[14.5rem] md:mt-[9.2rem]">
+    <div className={`${slider ? "mt-[29rem]" : "mt-[18.5rem]"} xs:mt-[22.3rem] sm:mt-[14.5rem] md:mt-[9.2rem]`}>
       {isLoading ? (
         <div className="w-full h-[40vh] flex items-center justify-center">
           <Loader />
